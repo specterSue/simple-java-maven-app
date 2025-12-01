@@ -15,24 +15,25 @@ jobs:
         NEW_VERSION="$major.$minor.$patch"
         echo "$NEW_VERSION" > version.txt
         echo "VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
     - name: commit new version
       run: |
         git config --local user.name "github-action"
         git config --local user.email "github-actions@github.com"
         git add version.txt
-        git commit -m "new version to ${{ env.VERSION }}"
+        git commit -m "new version to ${{ env.NEW_VERSION }}"
         git push
 
     - name: Login to GH container registry
       run: |
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        
+
     - name: build docker image
       run: |
-        docker build -t ghcr.io/${{ github.actor }}/weatherapp:${{ env.VERSION }} .
+        docker build -t ghcr.io/${{ github.actor }}/weatherapp:${{ env.NEW_VERSION }} .
 
 
     - name: Push Docker image
       run: |
-        docker push ghcr.io/${{ github.actor }}/weatherapp:${{ env.VERSION }}
+        docker push ghcr.io/${{ github.actor }}/weatherapp:${{ env.NEW_VERSION }}
