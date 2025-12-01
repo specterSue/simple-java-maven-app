@@ -1,6 +1,10 @@
 name: GitHub ci/cd
 run-name: countinues integration
 on: [push]
+
+env:
+  IMAGE_USER: spectersue
+
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -27,13 +31,13 @@ jobs:
 
     - name: Login to GH container registry
       run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ env.IMAGE_USER }} --password-stdin
 
     - name: build docker image
       run: |
-        docker build -t ghcr.io/${{ github.actor }}/weatherapp:${{ env.NEW_VERSION }} .
+        docker build -t ghcr.io/${{ env.IMAGE_USER }}/weatherapp:${{ env.NEW_VERSION }} .
 
 
     - name: Push Docker image
       run: |
-        docker push ghcr.io/${{ github.actor }}/weatherapp:${{ env.NEW_VERSION }}
+        docker push ghcr.io/${{ env.IMAGE_USER }}/weatherapp:${{ env.NEW_VERSION }}
