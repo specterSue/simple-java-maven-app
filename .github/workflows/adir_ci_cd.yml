@@ -30,7 +30,7 @@ jobs:
         
     - name: build docker image
       run: |
-        docker build -t ghcr.io/${{ github.actor }}/weatherapp:${{ env.VERSION }} .
+        docker build -t ${{ github.actor }}/weatherapp:${{ env.VERSION }} .
 
 
     - name: Push Docker image
